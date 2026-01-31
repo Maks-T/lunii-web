@@ -16,12 +16,22 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // 1. Создаем админа, если пользователя с таким email еще нет
+        User::firstOrCreate(
+            ['email' => 'admin@admin.com'], // По какому полю искать
+            [
+                'name' => 'Admin',
+                'password' => Hash::make('111222'),
+            ]
+        );
 
-        User::factory()->create([
-            'name' => 'Admin',
-            'email' => 'admin@admin.com',
-            'password' => Hash::make('111222'),
+        // 2. Вызываем остальные сидеры каталога
+        $this->call([
+            CategorySeeder::class,
+            WarehouseSeeder::class,
+            ProductLabelSeeder::class,
+            AttributeSeeder::class,
+            ProductSeeder::class,
         ]);
     }
 }

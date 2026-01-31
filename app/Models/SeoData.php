@@ -1,0 +1,25 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
+
+class SeoData extends Model
+{
+    protected $fillable = [
+        'seoable_id',
+        'seoable_type',
+        'title',
+        'description',
+        'keywords',
+        'og_title',
+        'og_description',
+        'og_image'
+    ];
+
+    public function seoable(): MorphTo
+    {
+        return $this->morphTo();
+    }
+}

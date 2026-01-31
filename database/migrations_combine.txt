@@ -1,0 +1,618 @@
+
+
+//{//wsl.localhost/Ubuntu-24.04/home/maks-t/lunii-web/database/migrations/2026_01_31_182826_create_categories_table.php}
+
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('categories', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('slug')->unique();
+            $table->nestedSet(); // parent_id, _lft, _rgt (нужен пакет kalnoy/nestedset)
+            $table->boolean('is_active')->default(true);
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('categories');
+    }
+};
+
+
+
+//{//wsl.localhost/Ubuntu-24.04/home/maks-t/lunii-web/database/migrations/0001_01_01_000000_create_users_table.php}
+
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password');
+            $table->rememberToken();
+            $table->timestamps();
+        });
+
+        Schema::create('password_reset_tokens', function (Blueprint $table) {
+            $table->string('email')->primary();
+            $table->string('token');
+            $table->timestamp('created_at')->nullable();
+        });
+
+        Schema::create('sessions', function (Blueprint $table) {
+            $table->string('id')->primary();
+            $table->foreignId('user_id')->nullable()->index();
+            $table->string('ip_address', 45)->nullable();
+            $table->text('user_agent')->nullable();
+            $table->longText('payload');
+            $table->integer('last_activity')->index();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('users');
+        Schema::dropIfExists('password_reset_tokens');
+        Schema::dropIfExists('sessions');
+    }
+};
+
+
+
+//{//wsl.localhost/Ubuntu-24.04/home/maks-t/lunii-web/database/migrations/0001_01_01_000002_create_jobs_table.php}
+
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('jobs', function (Blueprint $table) {
+            $table->id();
+            $table->string('queue')->index();
+            $table->longText('payload');
+            $table->unsignedTinyInteger('attempts');
+            $table->unsignedInteger('reserved_at')->nullable();
+            $table->unsignedInteger('available_at');
+            $table->unsignedInteger('created_at');
+        });
+
+        Schema::create('job_batches', function (Blueprint $table) {
+            $table->string('id')->primary();
+            $table->string('name');
+            $table->integer('total_jobs');
+            $table->integer('pending_jobs');
+            $table->integer('failed_jobs');
+            $table->longText('failed_job_ids');
+            $table->mediumText('options')->nullable();
+            $table->integer('cancelled_at')->nullable();
+            $table->integer('created_at');
+            $table->integer('finished_at')->nullable();
+        });
+
+        Schema::create('failed_jobs', function (Blueprint $table) {
+            $table->id();
+            $table->string('uuid')->unique();
+            $table->text('connection');
+            $table->text('queue');
+            $table->longText('payload');
+            $table->longText('exception');
+            $table->timestamp('failed_at')->useCurrent();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('jobs');
+        Schema::dropIfExists('job_batches');
+        Schema::dropIfExists('failed_jobs');
+    }
+};
+
+
+
+//{//wsl.localhost/Ubuntu-24.04/home/maks-t/lunii-web/database/migrations/2026_01_31_182827_create_seo_data_table.php}
+
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('seo_data', function (Blueprint $table) {
+            $table->id();
+            $table->morphs('seoable');
+
+            // Мета-теги
+            $table->string('title')->nullable();
+            $table->text('description')->nullable();
+            $table->string('keywords')->nullable();
+
+            // Open Graph
+            $table->string('og_title')->nullable();
+            $table->text('og_description')->nullable();
+            $table->string('og_image')->nullable();
+
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('seo_data');
+    }
+};
+
+
+
+//{//wsl.localhost/Ubuntu-24.04/home/maks-t/lunii-web/database/migrations/2026_01_31_182827_create_tags_table.php}
+
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('tags', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('tags');
+    }
+};
+
+
+
+//{//wsl.localhost/Ubuntu-24.04/home/maks-t/lunii-web/database/migrations/2026_01_31_182827_create_prices_table.php}
+
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('prices', function (Blueprint $table) {
+            $table->id();
+            // Полиморфная связь (Product или в будущем SKU)
+            $table->morphs('priceable');
+
+            $table->string('type')->default('base'); // base, vip, wholesale
+
+            $table->decimal('price', 12, 2);           //
+            $table->decimal('old_price', 12, 2)->nullable(); // Цена до скидки
+            $table->integer('discount_percent')->nullable(); // Процент скидки
+
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('prices');
+    }
+};
+
+
+
+//{//wsl.localhost/Ubuntu-24.04/home/maks-t/lunii-web/database/migrations/2026_01_31_182827_create_product_labels_table.php}
+
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('product_labels', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('code')->unique();
+            $table->string('color')->nullable();
+            $table->string('icon')->nullable();
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('product_labels');
+    }
+};
+
+
+
+//{//wsl.localhost/Ubuntu-24.04/home/maks-t/lunii-web/database/migrations/2026_01_31_182826_create_products_table.php}
+
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('products', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('category_id')->constrained();
+            $table->string('name'); // Дневной крем MEDICUBE, 75 мл
+            $table->string('slug')->unique();
+            $table->string('sku')->unique()->nullable();
+            $table->text('description')->nullable();
+
+            // Цены для быстрой фильтрации
+            $table->decimal('price', 12, 2)->index();
+            $table->decimal('old_price', 12, 2)->nullable();
+
+            // Суммарный остаток
+            $table->integer('total_stock')->default(0);
+            $table->boolean('is_active')->default(true);
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('products');
+    }
+};
+
+
+
+//{//wsl.localhost/Ubuntu-24.04/home/maks-t/lunii-web/database/migrations/2026_01_31_182827_create_images_table.php}
+
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('images', function (Blueprint $table) {
+            $table->id();
+            $table->morphs('imageable');
+            $table->string('path');
+            $table->integer('sort_order')->default(0);
+            $table->boolean('is_main')->default(false);
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('images');
+    }
+};
+
+
+
+//{//wsl.localhost/Ubuntu-24.04/home/maks-t/lunii-web/database/migrations/2026_01_31_183652_create_shop_pivot_tables.php}
+
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        // 1. Связь Товара и Значений Атрибутов (для фильтров: Бренд, Тип кожи и т.д.)
+        Schema::create('attribute_value_product', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('product_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('attribute_value_id')->constrained()->cascadeOnDelete();
+        });
+
+        // 2. Связь Товара и Меток (New, Hit, Sale)
+        Schema::create('label_product', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('product_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('product_label_id')->constrained()->cascadeOnDelete();
+        });
+
+        // 3. Связь Товара и SEO-тегов (для поиска и группировок)
+        Schema::create('product_tag', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('product_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('tag_id')->constrained()->cascadeOnDelete();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('product_tag');
+        Schema::dropIfExists('label_product');
+        Schema::dropIfExists('attribute_value_product');
+    }
+};
+
+
+
+//{//wsl.localhost/Ubuntu-24.04/home/maks-t/lunii-web/database/migrations/2026_01_31_182827_create_warehouses_table.php}
+
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('warehouses', function (Blueprint $table) {
+            $table->id();
+            $table->string('name'); // "Главный склад"
+            $table->string('code')->unique();
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('warehouses');
+    }
+};
+
+
+
+//{//wsl.localhost/Ubuntu-24.04/home/maks-t/lunii-web/database/migrations/2026_01_31_182827_create_stocks_table.php}
+
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('stocks', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('warehouse_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('product_id')->constrained()->cascadeOnDelete();
+            $table->integer('quantity')->default(0);
+            $table->integer('reserved')->default(0);
+            $table->timestamps();
+            $table->unique(['warehouse_id', 'product_id']);
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('stocks');
+    }
+};
+
+
+
+//{//wsl.localhost/Ubuntu-24.04/home/maks-t/lunii-web/database/migrations/0001_01_01_000001_create_cache_table.php}
+
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('cache', function (Blueprint $table) {
+            $table->string('key')->primary();
+            $table->mediumText('value');
+            $table->integer('expiration')->index();
+        });
+
+        Schema::create('cache_locks', function (Blueprint $table) {
+            $table->string('key')->primary();
+            $table->string('owner');
+            $table->integer('expiration')->index();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('cache');
+        Schema::dropIfExists('cache_locks');
+    }
+};
+
+
+
+//{//wsl.localhost/Ubuntu-24.04/home/maks-t/lunii-web/database/migrations/2026_01_31_182826_create_attribute_values_table.php}
+
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('attribute_values', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('attribute_id')->constrained()->cascadeOnDelete();
+            $table->string('value'); // "Жирная"
+            $table->string('slug');
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('attribute_values');
+    }
+};
+
+
+
+//{//wsl.localhost/Ubuntu-24.04/home/maks-t/lunii-web/database/migrations/2026_01_31_182826_create_attributes_table.php}
+
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('attributes', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');           // Название: "Тип кожи"
+            $table->string('code')->unique(); // Код: "skin_type"
+            $table->boolean('allow_multiple')->default(false); // Одиночный выбор или список
+            $table->boolean('is_filterable')->default(true);   // Выводить ли в фильтры на сайте
+            $table->integer('sort_order')->default(0);         // Порядок в боковом меню
+            $table->string('display_type')->default('checkbox'); // checkbox, select, color
+            $table->json('settings')->nullable(); // Например: ['tooltip' => '...', 'unit' => 'мл', 'is_featured' => true]
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('attributes');
+    }
+};
+
