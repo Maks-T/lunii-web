@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -40,7 +41,16 @@ class HomeController extends Controller
         ->get()
         ->map(fn($p) => $this->formatProduct($p)),
 
-      'categories' => \App\Models\Category::orderBy('name')->get(['id', 'name', 'slug'/*, 'image'*/]),
+      'categories' => fn () => Category::orderBy('name')
+        ->with('images') // Подгружаем картинки
+        ->get(['id', 'name', 'slug'])
+        ->map(fn($cat) => [
+          'id' => $cat->id,
+          'name' => $cat->name,
+          'slug' => $cat->slug,
+          // Достаем путь первой картинки
+          'image' => $cat->images->first()?->path
+        ]),
 
     ]);
   }

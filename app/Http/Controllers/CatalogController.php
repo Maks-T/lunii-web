@@ -82,7 +82,16 @@ class CatalogController extends Controller
 
     // 8. РЕНДЕР СТРАНИЦЫ ЧЕРЕЗ INERTIA
     return Inertia::render('Catalog/index', [
-      'categories' => fn() => Category::orderBy('name')->get(['id', 'name', 'slug']),
+      'categories' => fn () => Category::orderBy('name')
+        ->with('images') // Подгружаем картинки
+        ->get(['id', 'name', 'slug'])
+        ->map(fn($cat) => [
+          'id' => $cat->id,
+          'name' => $cat->name,
+          'slug' => $cat->slug,
+          // Достаем путь первой картинки
+          'image' => $cat->images->first()?->path
+        ]),
 
       'filters' => fn() => Attribute::where('is_filterable', true)
         ->with(['values' => fn($q) => $q->orderBy('value')])

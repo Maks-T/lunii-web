@@ -22,7 +22,12 @@ class WarehouseResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
-    public static function form(Schema $schema): Schema
+  protected static string|null|\UnitEnum $navigationGroup = 'Магазин';
+  protected static ?string $modelLabel = 'Склад';
+  protected static ?string $pluralModelLabel = 'Склады';
+
+
+  public static function form(Schema $schema): Schema
     {
         return WarehouseForm::configure($schema);
     }

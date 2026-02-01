@@ -47,8 +47,24 @@ export const CatalogFilters = ({ filters, activeFilters }: Props) => {
     });
   };
 
+  const hasFilters = activeFilters?.attr && Object.keys(activeFilters.attr).length > 0;
+
+  const clearAll = () => {
+    router.get(route('catalog'), {}, { preserveScroll: true });
+  };
+
   return (
     <aside className="w-full space-y-12">
+
+      {hasFilters && (
+        <button
+          onClick={clearAll}
+          className="text-[12px] font-bold text-[#FF5C35] uppercase tracking-widest border-b border-[#FF5C35]/30 pb-1 mb-4"
+        >
+          Сбросить фильтры
+        </button>
+      )}
+
       {filters.map((attribute) => (
         <div key={attribute.id} className="flex flex-col">
           <h3 className="text-[14px] md:text-[16px] font-bold tracking-[0.1em] text-[#BFA68A] uppercase mb-6">

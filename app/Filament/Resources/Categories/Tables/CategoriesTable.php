@@ -6,49 +6,62 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class CategoriesTable
 {
-    public static function configure(Table $table): Table
-    {
-        return $table
-            ->columns([
-                TextColumn::make('name')
-                    ->searchable(),
-                TextColumn::make('slug')
-                    ->searchable(),
-                TextColumn::make('_lft')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('_rgt')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('parent_id')
-                    ->numeric()
-                    ->sortable(),
-                IconColumn::make('is_active')
-                    ->boolean(),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-            ])
-            ->filters([
-                //
-            ])
-            ->recordActions([
-                EditAction::make(),
-            ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
-            ]);
-    }
+  public static function configure(Table $table): Table
+  {
+    return $table
+      ->columns([
+        TextColumn::make('id')
+          ->label('ID')
+          ->sortable()
+          ->toggleable(isToggledHiddenByDefault: true),
+        ImageColumn::make('images.path')
+          ->label('Фото')
+          ->disk('public')
+          ->circular()
+          ->limit(1)
+          ->toggleable(),
+        TextColumn::make('name')
+          ->searchable(),
+        TextColumn::make('slug')
+          ->searchable(),
+        TextColumn::make('_lft')
+          ->numeric()
+          ->sortable()
+          ->toggleable(isToggledHiddenByDefault: true),
+        TextColumn::make('_rgt')
+          ->numeric()
+          ->sortable()
+          ->toggleable(isToggledHiddenByDefault: true),
+        TextColumn::make('parent_id')
+          ->numeric()
+          ->sortable(),
+        IconColumn::make('is_active')
+          ->boolean(),
+        TextColumn::make('created_at')
+          ->dateTime()
+          ->sortable()
+          ->toggleable(isToggledHiddenByDefault: true),
+        TextColumn::make('updated_at')
+          ->dateTime()
+          ->sortable()
+          ->toggleable(isToggledHiddenByDefault: true),
+      ])
+      ->filters([
+        //
+      ])
+      ->recordActions([
+        EditAction::make(),
+      ])
+      ->toolbarActions([
+        BulkActionGroup::make([
+          DeleteBulkAction::make(),
+        ]),
+      ]);
+  }
 }

@@ -27,26 +27,42 @@ class ProductForm
                         ->required(),
 
                     TextInput::make('name')
+                        ->label('Название')
                         ->required()
                         ->live(onBlur: true)
                         ->afterStateUpdated(fn ($state, $set) => $set('slug', \Illuminate\Support\Str::slug($state))),
 
-                    TextInput::make('slug')->required()->unique('products', 'slug', ignoreRecord: true),
-                    TextInput::make('sku')->label('Артикул'),
-                    Textarea::make('description')->columnSpanFull(),
+                    TextInput::make('slug')
+                      ->required()
+                      ->unique('products', 'slug', ignoreRecord: true),
+                    TextInput::make('sku')
+                      ->label('Артикул'),
+                    Textarea::make('description')
+                      ->label('Описание')
+                      ->columnSpanFull(),
                 ])->columns(2),
 
                 Tabs\Tab::make('Цены и Склад')->schema([
-                    TextInput::make('price')->label('Цена')->numeric()->prefix('BYN')->required(),
-                    TextInput::make('old_price')->label('Старая цена (скидка)')->numeric()->prefix('BYN'),
+                    TextInput::make('price')
+                      ->label('Цена')
+                      ->numeric()
+                      ->prefix('BYN')
+                      ->required(),
+
+                    TextInput::make('old_price')
+                      ->label('Старая цена (скидка)')
+                      ->numeric()->prefix('BYN'),
 
                     Repeater::make('stocks')
+                        ->label('Склады')
                         ->relationship('stocks')
                         ->schema([
                             Select::make('warehouse_id')
                                 ->relationship('warehouse', 'name')
                                 ->required(),
-                            TextInput::make('quantity')->label('Остаток')->numeric()->default(0),
+                            TextInput::make('quantity')->label('Остаток')
+                              ->numeric()
+                              ->default(0),
                         ])->columns(2)->label('Наличие по складам'),
                 ]),
 

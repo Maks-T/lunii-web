@@ -51,7 +51,7 @@ class AttributeSeeder extends Seeder
     ]);
     $concern->values()->delete();
     $concern->values()->createMany([
-      ['value' => 'Anti_age', 'slug' => 'anti-age'],
+      ['value' => 'Антивозрастной', 'slug' => 'anti-age'],
       ['value' => 'Воспаленная/комедоны', 'slug' => 'acne'],
       ['value' => 'Излишняя жирность', 'slug' => 'oil-control'],
       ['value' => 'Купероз', 'slug' => 'rosacea'],

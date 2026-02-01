@@ -9,6 +9,7 @@ import {DeliveryInfo} from "@/widgets/delivery-info/DeliveryInfo";
 import {DeveloperBanner} from "@/widgets/developer-banner/ui/DeveloperBanner";
 import {BrandsMarquee} from "@/widgets/brands-marquee/ui/BrandsMarquee";
 import {CatalogPills} from "@/features/catalog/components/CatalogPills";
+import {PromoGrid} from "@/widgets/promo-grid/PromoGrid";
 
 
 interface Category {
@@ -33,6 +34,8 @@ export default function Home({ categories, hits, newArrivals, saleProducts }: Pr
 
       {/* Ваш Hero блок здесь */}
       <HomeHero />
+
+      <PromoGrid />
 
       <BrandsMarquee />
 

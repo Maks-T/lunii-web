@@ -10,28 +10,28 @@ use Filament\Schemas\Schema;
 
 class AttributeForm
 {
-    public static function configure(Schema $schema): Schema
-    {
-        return $schema->components([
-            TextInput::make('name')->label('Название (для сайта)')->required(),
-            TextInput::make('code')->label('Код (для кода/фильтра)')->required(),
+  public static function configure(Schema $schema): Schema
+  {
+    return $schema->components([
+      TextInput::make('name')->label('Название (для сайта)')->required(),
+      TextInput::make('code')->label('Код (для кода/фильтра)')->required(),
 
-            Select::make('display_type')
-                ->options([
-                    'checkbox' => 'Чекбоксы',
-                    'select' => 'Список',
-                    'color' => 'Цвет/Иконка',
-                ])->default('checkbox'),
+      Select::make('display_type')
+        ->options([
+          'checkbox' => 'Чекбоксы',
+          'select' => 'Список',
+          'color' => 'Цвет/Иконка',
+        ])->default('checkbox'),
 
-            Toggle::make('allow_multiple')->label('Множественный выбор'),
-            Toggle::make('is_filterable')->label('Показывать в фильтрах'),
+      Toggle::make('allow_multiple')->label('Множественный выбор'),
+      Toggle::make('is_filterable')->label('Показывать в фильтрах'),
 
-            TextInput::make('sort_order')->numeric()->default(0),
+      TextInput::make('sort_order')->numeric()->default(0),
 
-            KeyValue::make('settings')
-                ->label('Доп. настройки (unit, иконка)')
-                ->keyLabel('Свойство')
-                ->valueLabel('Значение'),
-        ]);
-    }
+      KeyValue::make('settings')
+        ->label('Доп. настройки (unit, иконка)')
+        ->keyLabel('Свойство')
+        ->valueLabel('Значение'),
+    ]);
+  }
 }

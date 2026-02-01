@@ -14,6 +14,10 @@ class WarehousesTable
     {
         return $table
             ->columns([
+              TextColumn::make('id')
+                ->label('ID')
+                ->sortable()
+                ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('code')
