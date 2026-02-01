@@ -41,6 +41,8 @@ export const CatalogFilters = ({ filters, activeFilters }: Props) => {
     // Отправляем запрос через Inertia (обновит только данные, без перезагрузки страницы)
     router.get(route('catalog'), { attr: currentParams }, {
       preserveScroll: true,
+      preserveState: true,
+      only: ['products', 'activeFilters'], // Обновляем только сетку и состояние
       replace: true,
     });
   };

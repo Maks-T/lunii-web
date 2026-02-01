@@ -15,7 +15,7 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-    --font-sans: "Figtree", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --font-sans: "Montserrat", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
     --color-background: hsl(var(--background));
     --color-foreground: hsl(var(--foreground));
@@ -135,4 +135,34 @@
 /* Опционально: замедление при наведении */
 .animate-marquee:hover {
   animation-play-state: paused;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(191, 166, 138, 0.35); /* Цвет ваших заголовков */
+  border-radius: 10px;
+}
+
+/* Для Firefox */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(191, 166, 138, 0.09) transparent;
+}
+
+@keyframes marquee-brands {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee-brands {
+  display: flex;
+  width: max-content;
+  animation: marquee-brands 30s linear infinite;
 }

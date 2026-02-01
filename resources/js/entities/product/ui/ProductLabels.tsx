@@ -30,7 +30,6 @@ export const ProductLabels = ({labels, discount, className}: ProductLabelsProps)
             style={{backgroundColor: bgColor}}
             className={cn(
               "flex items-center justify-center",
-              // Пропорции: высота заметно больше ширины
               "w-[38px] h-[52px] md:w-[48px] md:h-[64px]"
             )}
           >
@@ -43,7 +42,7 @@ export const ProductLabels = ({labels, discount, className}: ProductLabelsProps)
                 ) :
                 /* 2. Если это ХИТ (hit) — выводим огонек */
                   label.code === 'hit' ? (
-                    <Flame className="w-5 h-5 md:w-7 md:h-7 fill-white stroke-none shadow-sm"/>
+                    <Flame className="w-5 h-5 md:w-7 md:h-7 fill-white stroke-none"/>
                   ) :
                   /* 3. Если это НОВИНКА (new) — выводим текст NEW */
                   label.code === 'new' ? (

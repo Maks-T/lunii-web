@@ -39,7 +39,7 @@ class CatalogController extends Controller
     // Ожидаемый формат: ?attr[skin_type][]=dry&attr[brand][]=medipeel
     if ($request->has('attr') && is_array($request->attr)) {
       foreach ($request->attr as $code => $slugs) {
-        $slugs = array_filter((array) $slugs); // Убираем пустые значения
+        $slugs = array_filter((array)$slugs); // Убираем пустые значения
 
         if (empty($slugs)) continue;
 
@@ -82,9 +82,9 @@ class CatalogController extends Controller
 
     // 8. РЕНДЕР СТРАНИЦЫ ЧЕРЕЗ INERTIA
     return Inertia::render('Catalog/index', [
-      'categories' => fn () => Category::orderBy('name')->get(['id', 'name', 'slug']),
+      'categories' => fn() => Category::orderBy('name')->get(['id', 'name', 'slug']),
 
-      'filters' => fn () => Attribute::where('is_filterable', true)
+      'filters' => fn() => Attribute::where('is_filterable', true)
         ->with(['values' => fn($q) => $q->orderBy('value')])
         ->orderBy('sort_order')
         ->get()
@@ -106,8 +106,8 @@ class CatalogController extends Controller
         'links' => $products->linkCollection()->toArray(),
       ],
       'activeFilters' => [
-        'category' => $request->category,
-        'label' => $request->label,
+        'category' => $request->category, // это должна быть строка, например "creams"
+        'label' => $request->label,       // например "hit"
         'attr' => $request->attr ?? [],
       ],
     ]);
@@ -122,8 +122,8 @@ class CatalogController extends Controller
       'id' => $product->id,
       'name' => $product->name,
       'slug' => $product->slug,
-      'price' => (float) $product->price,
-      'old_price' => $product->old_price ? (float) $product->old_price : null,
+      'price' => (float)$product->price,
+      'old_price' => $product->old_price ? (float)$product->old_price : null,
       'description' => $product->description,
       'is_available' => $product->total_stock > 0,
       // Путь к первой главной картинке
