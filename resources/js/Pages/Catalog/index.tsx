@@ -82,10 +82,12 @@ export default function Catalog({ categories, filters, products, activeFilters }
 
       <section className="container mx-auto px-4 pb-24">
         {/* Верхние фильтры-пилюли */}
-        <CatalogPills
-          categories={categories}
-          activeFilters={activeFilters}
-        />
+        <div className="container mx-auto px-4 py-12">
+          <CatalogPills
+            categories={categories}
+            activeFilters={activeFilters}
+          />
+        </div>
 
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
           <div className="flex items-baseline gap-2">
