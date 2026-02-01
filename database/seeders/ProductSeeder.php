@@ -14,66 +14,63 @@ use Illuminate\Support\Str;
 
 class ProductSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
-    public function run(): void
-    {
-        $category = Category::first();
-        $warehouse = Warehouse::first();
-        $labels = ProductLabel::all();
+  /**
+   * Run the database seeds.
+   */
+  public function run(): void
+  {
+    $categories = \App\Models\Category::all();
+    $labels = \App\Models\ProductLabel::all();
+    $warehouse = \App\Models\Warehouse::first();
 
-        // Берем некоторые значения атрибутов для рандома
-        $brands = AttributeValue::whereHas('attribute', fn($q) => $q->where('code', 'brand'))->get();
-        $skinTypes = AttributeValue::whereHas('attribute', fn($q) => $q->where('code', 'skin_type'))->get();
+    // Получаем все возможные значения атрибутов
+    $allValues = \App\Models\AttributeValue::with('attribute')->get();
 
-        for ($i = 1; $i <= 10; $i++) {
-            $price = 100.00;
-            $oldPrice = ($i % 3 == 0) ? 120.00 : null; // Каждому третьему даем скидку
+    for ($i = 1; $i <= 20; $i++) {
+      $price = rand(40, 150);
+      $hasSale = rand(0, 1);
+      $oldPrice = $hasSale ? $price + 20 : null;
 
-            $product = Product::create([
-                'category_id' => $category->id,
-                'name' => "MEDICUBE Care Sun Cream origin " . ($i > 1 ? "#$i" : ""),
-                'slug' => Str::slug("medicube-sun-cream-origin-$i"),
-                'sku' => "MED-SUN-" . Str::upper(Str::random(5)),
-                'description' => "ДНЕВНОЙ КРЕМ ДЛЯ НОРМАЛЬНОЙ КОЖИ, 75 МЛ. Интенсивная защита от солнца.",
-                'price' => $price,
-                'old_price' => $oldPrice,
-                'total_stock' => 50,
-                'is_active' => true,
-            ]);
+      $product = \App\Models\Product::create([
+        'category_id' => $categories->random()->id,
+        'name' => "MEDICUBE Care Sun Cream " . ($i > 1 ? "v.$i" : "origin"),
+        'slug' => \Illuminate\Support\Str::slug("medicube-sun-cream-$i"),
+        'sku' => "MED-" . rand(1000, 9999),
+        'description' => 'ДНЕВНОЙ КРЕМ ДЛЯ НОРМАЛЬНОЙ КОЖИ, 75 ML',
+        'price' => $price,
+        'old_price' => $oldPrice,
+        'total_stock' => rand(0, 50), // У некоторых будет 0 для статуса "Ожидается"
+        'is_active' => true,
+      ]);
 
-            // Привязываем бренд (одиночный)
-            $product->attributeValues()->attach($brands->random()->id);
+      // 1. Привязываем метки
+      if ($hasSale) {
+        $product->labels()->attach($labels->where('code', 'sale')->first()->id);
+      }
+      if (rand(0, 1)) {
+        $product->labels()->attach($labels->where('code', 'new')->first()->id);
+      }
+      if (rand(0, 1)) {
+        $product->labels()->attach($labels->where('code', 'hit')->first()->id);
+      }
 
-            // Привязываем типы кожи (множественный)
-            $product->attributeValues()->attach($skinTypes->random(2)->pluck('id'));
+      // 2. Привязываем атрибуты для фильтрации
+      // Берем по 1 значению из каждой группы
+      $brandVal = $allValues->where('attribute.code', 'brand')->random();
+      $areaVal = $allValues->where('attribute.code', 'area')->random();
+      $skinVal = $allValues->where('attribute.code', 'skin_type')->random();
+      $concernVal = $allValues->where('attribute.code', 'concern')->random();
 
-            // Добавляем метку (New или Sale)
-            if ($oldPrice) {
-                $product->labels()->attach($labels->where('code', 'sale')->first()?->id);
-            } else {
-                $product->labels()->attach($labels->where('code', 'new')->first()?->id);
-            }
+      $product->attributeValues()->attach([
+        $brandVal->id,
+        $areaVal->id,
+        $skinVal->id,
+        $concernVal->id
+      ]);
 
-            // Создаем запись в таблице цен
-            $product->prices()->create([
-                'type' => 'base',
-                'price' => $price,
-                'old_price' => $oldPrice,
-            ]);
-
-            // Создаем остаток на складе
-            $product->stocks()->create([
-                'warehouse_id' => $warehouse->id,
-                'quantity' => 50,
-            ]);
-
-            // Добавляем SEO заглушку
-            $product->seo()->create([
-                'title' => $product->name . " купить в Минске",
-                'description' => "Купить " . $product->name . " по лучшей цене в магазине LUNII.",
-            ]);
-        }
+      // 3. Остатки и Цены
+      $product->stocks()->create(['warehouse_id' => $warehouse->id, 'quantity' => $product->total_stock]);
+      $product->prices()->create(['type' => 'base', 'price' => $price, 'old_price' => $oldPrice]);
     }
+  }
 }

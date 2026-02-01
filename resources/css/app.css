@@ -1,7 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&display=swap');
+
 @import "tailwindcss";
 
 @plugin "tailwindcss-animate";
 
+/* Настройка темы для Tailwind v4 */
+@theme {
+  /* Назначаем Montserrat основным шрифтом (вместо Figtree) */
+  --font-sans: "Montserrat", ui-sans-serif, system-ui, sans-serif;
+
+  /* Создаем отдельный класс для Orbitron */
+  --font-orbitron: "Orbitron", sans-serif;
+}
 @custom-variant dark (&:is(.dark *));
 
 @theme {
@@ -109,4 +119,20 @@
     body {
         @apply bg-background text-foreground;
     }
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 20s linear infinite;
+}
+
+/* Опционально: замедление при наведении */
+.animate-marquee:hover {
+  animation-play-state: paused;
 }

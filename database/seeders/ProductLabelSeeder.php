@@ -7,40 +7,16 @@ use Illuminate\Database\Seeder;
 
 class ProductLabelSeeder extends Seeder
 {
-    public function run(): void
-    {
-        $labels = [
-            [
-                'name' => 'New',
-                'code' => 'new',
-                'color' => '#84cc16', // Lime-500 (Зеленый как на скрине)
-                'icon' => 'heroicon-o-sparkles',
-            ],
-            [
-                'name' => 'Hit',
-                'code' => 'hit',
-                'color' => '#f97316', // Orange-500 (Оранжевый огонь)
-                'icon' => 'heroicon-o-fire',
-            ],
-            [
-                'name' => 'Sale',
-                'code' => 'sale',
-                'color' => '#ef4444', // Red-500 (Красный процент)
-                'icon' => 'heroicon-o-receipt-percent',
-            ],
-            [
-                'name' => 'Рекомендовано',
-                'code' => 'recommended',
-                'color' => '#06b6d4', // Cyan-500 (Голубая капля)
-                'icon' => 'heroicon-o-beaker',
-            ],
-        ];
+  public function run(): void
+  {
+    $labels = [
+      ['name' => 'New', 'code' => 'new', 'color' => '#84CC16'], // Салатовый
+      ['name' => 'Hit', 'code' => 'hit', 'color' => '#FACC15'], // Желтый
+      ['name' => 'Sale', 'code' => 'sale', 'color' => '#FF5C35'], // Оранжево-красный
+    ];
 
-        foreach ($labels as $label) {
-            ProductLabel::updateOrCreate(
-                ['code' => $label['code']], // Чтобы не дублировать при повторном запуске
-                $label
-            );
-        }
+    foreach ($labels as $label) {
+      \App\Models\ProductLabel::updateOrCreate(['code' => $label['code']], $label);
     }
+  }
 }
