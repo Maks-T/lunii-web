@@ -1,85 +1,96 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import { cn } from '@/lib/utils';
+import {motion} from 'framer-motion';
+import {Link} from '@inertiajs/react';
+import {ShieldCheck} from 'lucide-react';
+import {DeliveryBackground} from './DeliveryBackground';
 
 export const DeliveryInfo = () => {
-  // Варианты анимации для плавного появления
+  // Анимация появления блоков контента
   const itemVariant = {
-    hidden: { opacity: 0, y: 20 },
-    visible: (i: number) => ({
-      opacity: 1,
-      y: 0,
-      transition: { delay: i * 0.2, duration: 0.6 }
-    })
+    hidden: {opacity: 0, y: 20},
+    visible: {opacity: 1, y: 0, transition: {duration: 0.6}}
   };
 
   return (
-    <section className="relative py-16 md:py-24 bg-[#F8F9FB] overflow-hidden font-sans">
-      {/* Декоративные бежевые круги (абсолютное позиционирование) */}
-      <div className="absolute inset-0 pointer-events-none select-none">
-        <div className="absolute top-[20%] left-[40%] w-6 h-6 rounded-full bg-[#D4C3B3] opacity-60" />
-        <div className="absolute bottom-[20%] left-[48%] w-5 h-5 rounded-full bg-[#D4C3B3] opacity-50" />
-        <div className="absolute bottom-[15%] left-[55%] w-6 h-6 rounded-full bg-[#D4C3B3] opacity-60" />
-      </div>
+    <section className="relative py-24 md:py-40 bg-page-bg overflow-hidden font-sans">
+
+      {/* Анимированный фон */}
+      <DeliveryBackground/>
 
       <div className="container mx-auto px-4 relative z-10">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-center gap-12 md:gap-32">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{once: true, margin: "-100px"}}
+          className="grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-10 items-start"
+        >
 
-          {/* Блок 1: Доставка по Беларуси */}
-          <motion.div
-            custom={1}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={itemVariant}
-            className="flex items-start gap-6"
-          >
-            {/* Иконка-круг BY */}
-            <div className="w-20 h-20 md:w-24 md:h-24 rounded-full border border-[#1A1A1C] flex items-center justify-center shrink-0">
-              <span className="text-[18px] md:text-[22px] font-black tracking-tighter text-[#1A1A1C]">BY</span>
+          {/* Блок 1: Гарантия */}
+          <motion.div variants={itemVariant} className="flex items-center gap-6">
+            <div
+              className="w-[104px] h-[104px] rounded-full border border-[#1E1E2C] flex items-center justify-center shrink-0">
+              <ShieldCheck className="w-10 h-10 stroke-[1.2] text-[#1E1E2C]"/>
             </div>
+            <h3 className="font-montserrat font-normal text-[28px] leading-[100%] uppercase text-[#1E1E2C]">
+              Гарантия <br/> качества продукции
+            </h3>
+          </motion.div>
 
-            <div className="space-y-4">
-              <h3 className="text-[20px] md:text-[26px] font-bold leading-tight uppercase tracking-wide text-[#1A1A1C]">
-                Доставка <br /> по всей Беларуси
+          {/* Блок 2: Доставка по всей Беларуси */}
+          <motion.div variants={itemVariant} className="flex items-start gap-6">
+            <div
+              className="w-[104px] h-[104px] rounded-full border border-[#1E1E2C] flex items-center justify-center shrink-0">
+              <span className="font-montserrat font-bold text-[24px] text-[#1E1E2C]">BY</span>
+            </div>
+            <div className="space-y-6">
+              <h3 className="font-montserrat font-normal text-[28px] leading-[100%] uppercase text-[#1E1E2C]">
+                Доставка <br/> по всей Беларуси
               </h3>
-
-              {/* Методы доставки */}
-              <ul className="space-y-2">
-                {['Почта', 'Европочта'].map((method) => (
-                  <li key={method} className="flex items-center gap-3 group">
-                    <div className="w-2.5 h-2.5 rounded-full bg-[#D4C3B3] transition-transform group-hover:scale-125" />
-                    <span className="text-[12px] md:text-[14px] font-bold uppercase tracking-[0.15em] text-[#1A1A1C]/70 group-hover:text-[#1A1A1C] transition-colors">
-                                            {method}
-                                        </span>
+              <ul className="space-y-4">
+                {['Почта', 'Европочта', 'Курьер - Могилев'].map((item) => (
+                  <li key={item} className="flex items-center gap-4 group">
+                    <div className="w-2.5 h-2.5 rounded-full bg-[#D4C3B3]"/>
+                    <span className="font-montserrat font-normal text-[24px] leading-[100%] uppercase text-[#1E1E2C]">
+                      {item}
+                    </span>
                   </li>
                 ))}
               </ul>
             </div>
           </motion.div>
 
-          {/* Блок 2: Бесплатная доставка */}
-          <motion.div
-            custom={2}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={itemVariant}
-            className="flex items-start gap-6"
-          >
-            {/* Иконка-круг FREE */}
-            <div className="w-20 h-20 md:w-24 md:h-24 rounded-full border border-[#1A1A1C] flex items-center justify-center shrink-0">
-              <span className="text-[14px] md:text-[16px] font-black tracking-widest text-[#1A1A1C]">FREE</span>
+          {/* Блок 3: Бесплатная доставка */}
+          <motion.div variants={itemVariant} className="flex items-center gap-6">
+            <div
+              className="w-[104px] h-[104px] rounded-full border border-[#1E1E2C] flex items-center justify-center shrink-0">
+              <span className="font-montserrat font-bold text-[18px] text-[#1E1E2C] tracking-widest">FREE</span>
             </div>
-
-            <div className="pt-2 md:pt-4">
-              <h3 className="text-[20px] md:text-[26px] font-bold leading-tight uppercase tracking-wide text-[#1A1A1C]">
-                Бесплатная доставка <br /> от 100 BYN
-              </h3>
-            </div>
+            <h3 className="font-montserrat font-normal text-[28px] leading-[100%] uppercase text-[#1E1E2C]">
+              Бесплатная доставка <br/> от 100 BYN
+            </h3>
           </motion.div>
 
+        </motion.div>
+
+        {/* Кнопка ПОДРОБНЕЕ */}
+        <div className="mt-20 flex justify-end">
+          <Link
+            href="/delivery"
+            className="group flex items-center gap-6 font-montserrat font-medium text-[24px] leading-[100%] uppercase text-[#1E1E2C] hover:opacity-60 transition-opacity"
+          >
+            Подробнее
+            <div className="w-[72px] h-[72px] flex items-center justify-center">
+              <svg width="72" height="72" viewBox="0 0 72 72" fill="none"
+                   className="transition-transform group-hover:translate-x-2 group-hover:-translate-y-2">
+                <path d="M21 21H51V51" stroke="#1E1E2C" strokeWidth="3.375" strokeLinecap="round"
+                      strokeLinejoin="round"/>
+                <path d="M21 51L51 21" stroke="#1E1E2C" strokeWidth="3.375" strokeLinecap="round"
+                      strokeLinejoin="round"/>
+              </svg>
+            </div>
+          </Link>
         </div>
+
       </div>
     </section>
   );
