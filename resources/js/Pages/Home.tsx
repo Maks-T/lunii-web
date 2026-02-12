@@ -11,7 +11,6 @@ import {BrandsMarquee} from "@/widgets/brands-marquee/ui/BrandsMarquee";
 import {CatalogPills} from "@/features/catalog/components/CatalogPills";
 import {PromoGrid} from "@/widgets/promo-grid/PromoGrid";
 
-
 interface Category {
   id: number;
   name: string;
